@@ -31,10 +31,10 @@ def send_message(bot, message):
 
 def get_api_answer(current_timestamp):
     """Запрос к эндпоинту API-сервиса"""
-    timestamp = current_timestamp or int(time.time())
+    timestamp = current_timestamp #or int(time.time())
     params = {'from_date': timestamp}
     api_answer = requests.get(ENDPOINT, headers=HEADERS, params=params)
-    if api_answer.status.code != 200:
+    if api_answer.status_code == 200:
         return api_answer.json()
     else:
         raise Exception
@@ -42,7 +42,7 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверка ответа API на корректность"""
-    if isinstance(response,dict) and response.__contains__('homeworks'):
+    if isinstance(response, dict) and response.__contains__('homeworks'):
         return response['homeworks']
     else:
         raise Exception
@@ -71,8 +71,9 @@ def check_tokens():
 def main():
     """Основная логика работы бота."""
     bot = Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())
-    # Вызвать проверку токкенов, вписать логи, остановить если токены False
+    #current_timestamp = int(time.time())
+    current_timestamp = 0
+    # Вызвать проверку токкенов, вписать логи, остановить если токены Falseттт
     # bot.stop_polling()
 
 
@@ -84,7 +85,7 @@ def main():
                 for homework in homeworks:
                     message = parse_status(homework)
                     send_message(bot, message)
-            current_timestamp = 1665462792
+            current_timestamp = int(time.time())
             time.sleep(RETRY_TIME)
 
         except Exception as error:
