@@ -40,7 +40,6 @@ logger.addHandler(streamHandler)
 
 def send_message(bot, message):
     """Отправка сообщения в Telegram чат.
-
     Параметры:
     ----------
     bot: telegram.Bot
@@ -58,12 +57,10 @@ def send_message(bot, message):
 
 def get_api_answer(current_timestamp):
     """Запрос к эндпоинту API-сервиса ЯндексПрактикум.
-
     Параметр:
     ----------
     current_timestamp: int
         время, с которого запрашиваются обновления
-
     Возвращает:
     ----------
     api_answer: dict
@@ -87,7 +84,6 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверка ответа API-сервиса ЯндексПрактикум на корректность.
-
     Параметр:
     ----------
     response: dict
@@ -102,12 +98,11 @@ def check_response(response):
     if (isinstance(response, dict)
         and response.__contains__('homeworks')
         and response.__contains__('current_date')):
-        homeworks = response['homeworks']
-        if isinstance(homeworks, list):
-            return homeworks
-        else:
-            raise TypeError('homeworks не является списком.')
-
+            homeworks = response['homeworks']
+                if isinstance(homeworks, list):
+                    return homeworks
+                else:
+                    raise TypeError('homeworks не является списком.')
     else:
         raise TypeError(
             'Ответ API не является словарём и не содержит ожидаемые ключи.')
@@ -115,7 +110,6 @@ def check_response(response):
 
 def parse_status(homework):
     """Получение информации о конкретной домашней работе, статус этой работы.
-
     Параметр:
     ----------
     homework: dict
@@ -145,7 +139,6 @@ def parse_status(homework):
 
 def check_tokens():
     """Проверка доступности переменных окружения.
-
     Возвращает:
     ----------
     False - если отсутствует хотя бы одна переменная окружения
