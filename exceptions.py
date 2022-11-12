@@ -2,7 +2,7 @@ class HomeworkException(Exception):
     pass
 class StatusCodeError(HomeworkException):
     pass
-class ResponseError(HomeworkException):
+class HomeworkStatusError(HomeworkException):
     pass
-class StatusKeyError(HomeworkException):
+class TokensError(HomeworkException):
     pass
