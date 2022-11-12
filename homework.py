@@ -39,7 +39,8 @@ logger.addHandler(streamHandler)
 
 
 def send_message(bot, message):
-    """Отправка сообщения в Telegram чат.
+    """
+    Отправка сообщения в Telegram чат.
     Параметры:
     ----------
     bot: telegram.Bot
@@ -47,7 +48,6 @@ def send_message(bot, message):
     message: str
         сообщение, которое бот должен отправить
     """
-
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info('Сообщение успешно отправлено.')
@@ -56,7 +56,8 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
-    """Запрос к эндпоинту API-сервиса ЯндексПрактикум.
+    """
+    Запрос к эндпоинту API-сервиса ЯндексПрактикум.
     Параметр:
     ----------
     current_timestamp: int
@@ -66,7 +67,6 @@ def get_api_answer(current_timestamp):
     api_answer: dict
         ответ API-сервиса ЯндексПрактикум
     """
-
     timestamp = current_timestamp
     params = {'from_date': timestamp}
     api_answer = requests.get(ENDPOINT, headers=HEADERS, params=params)
@@ -83,7 +83,8 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """Проверка ответа API-сервиса ЯндексПрактикум на корректность.
+    """
+    Проверка ответа API-сервиса ЯндексПрактикум на корректность.
     Параметр:
     ----------
     response: dict
@@ -93,15 +94,14 @@ def check_response(response):
     homeworks: list
         список с домашними работами
     """
-
     if (isinstance(response, dict)
-      and response.__contains__('homeworks')
-      and response.__contains__('current_date')):
-        homeworks = response['homeworks']
-        if isinstance(homeworks, list):
-            return homeworks
-        else:
-            raise TypeError('homeworks не является списком.')
+        and response.__contains__('homeworks')
+        and response.__contains__('current_date')):
+            homeworks = response['homeworks']
+            if isinstance(homeworks, list):
+                return homeworks
+            else:
+                raise TypeError('homeworks не является списком.')
 
     else:
         raise TypeError(
@@ -109,7 +109,8 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Получение информации о конкретной домашней работе, статус этой работы.
+    """
+    Получение информации о конкретной домашней работе, статус этой работы.
     Параметр:
     ----------
     homework: dict
@@ -119,16 +120,15 @@ def parse_status(homework):
     str
         строку, содержащую сообщение о статусе домашней работы
     """
-
     if (isinstance(homework, dict)
-      and homework.__contains__('homework_name')
-      and homework.__contains__('status')):
-        homework_name = homework['homework_name']
-        homework_status = homework['status']
-        if homework_status in HOMEWORK_STATUSES:
-            verdict = HOMEWORK_STATUSES[homework_status]
-        else:
-            raise exceptions.HomeworkStatusError(
+        and homework.__contains__('homework_name')
+        and homework.__contains__('status')):
+            homework_name = homework['homework_name']
+            homework_status = homework['status']
+            if homework_status in HOMEWORK_STATUSES:
+                verdict = HOMEWORK_STATUSES[homework_status]
+            else:
+                raise exceptions.HomeworkStatusError(
                 'Получен неизвестный статус домашней работы.')
     else:
         raise KeyError(
@@ -137,13 +137,13 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """Проверка доступности переменных окружения.
+    """
+    Проверка доступности переменных окружения.
     Возвращает:
     ----------
     False - если отсутствует хотя бы одна переменная окружения
     True - если присутствуют все переменные окружения
     """
-
     return all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID])
 
 
