@@ -41,6 +41,7 @@ logger.addHandler(streamHandler)
 def send_message(bot, message):
     """
     Отправка сообщения в Telegram чат.
+
     Параметры:
     ----------
     bot: telegram.Bot
@@ -58,10 +59,12 @@ def send_message(bot, message):
 def get_api_answer(current_timestamp):
     """
     Запрос к эндпоинту API-сервиса ЯндексПрактикум.
+
     Параметр:
     ----------
     current_timestamp: int
         время, с которого запрашиваются обновления
+
     Возвращает:
     ----------
     api_answer: dict
@@ -85,17 +88,20 @@ def get_api_answer(current_timestamp):
 def check_response(response):
     """
     Проверка ответа API-сервиса ЯндексПрактикум на корректность.
+
     Параметр:
     ----------
     response: dict
         словарь с ключами 'homeworks' и 'current_date'
+
     Возвращает:
     ----------
     homeworks: list
         список с домашними работами
     """
-    if (isinstance(response, dict) and response.__contains__('homeworks')
-        and response.__contains__('current_date')):
+    if (isinstance(response, dict)
+            and response.__contains__('homeworks')
+            and response.__contains__('current_date')):
         homeworks = response['homeworks']
         if isinstance(homeworks, list):
             return homeworks
@@ -110,17 +116,20 @@ def check_response(response):
 def parse_status(homework):
     """
     Получение информации о конкретной домашней работе, статус этой работы.
+
     Параметр:
     ----------
     homework: dict
         словарь с данными о домашней работе
+
     Возвращает:
     ----------
     str
         строку, содержащую сообщение о статусе домашней работы
     """
-    if (isinstance(homework, dict) and homework.__contains__('homework_name')
-        and homework.__contains__('status')):
+    if (isinstance(homework, dict)
+            and homework.__contains__('homework_name')
+            and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
         if homework_status in HOMEWORK_STATUSES:
@@ -137,6 +146,7 @@ def parse_status(homework):
 def check_tokens():
     """
     Проверка доступности переменных окружения.
+
     Возвращает:
     ----------
     False - если отсутствует хотя бы одна переменная окружения
