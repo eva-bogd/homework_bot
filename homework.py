@@ -29,10 +29,11 @@ HOMEWORK_STATUSES = {
 
 logging.basicConfig(
     level=logging.DEBUG,
-    filename='program.log',
     format='%(asctime)s, %(levelname)s, %(name)s, %(message)s'
 )
 logger = logging.getLogger()
+fileHandler = logging.FileHandler('program.log', 'a', 'utf-8')
+logger.addHandler(fileHandler)
 streamHandler = logging.StreamHandler(sys.stdout)
 logger.addHandler(streamHandler)
 
@@ -108,7 +109,7 @@ def check_response(response):
         if isinstance (homeworks, list):
             return homeworks
         else:
-            raise TypeError('Homeworks не является списком.')
+            raise TypeError('homeworks не является списком.')
 
     else:
         raise TypeError(
@@ -131,8 +132,7 @@ def parse_status(homework):
     """
 
     if (isinstance(homework, dict)
-    # and homework.__contains__('homework_name')
-    # если оставляю строчку с проверкой 'homework_name' не проходят тесты
+    and homework.__contains__('homework_name')
     and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
@@ -142,8 +142,8 @@ def parse_status(homework):
             raise exceptions.HomeworkStatusError(
                 'Получен неизвестный статус домашней работы.')
     else:
-        raise TypeError(
-            'Homework не является словарём и не содержит ожидаемые ключи.')
+        raise KeyError(
+            'homework не является словарём и не содержит ожидаемые ключи.')
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
