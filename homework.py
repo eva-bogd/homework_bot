@@ -180,8 +180,8 @@ def main():
                     send_message(bot, message)
             else:
                 logging.debug('Нет новых статусов домашней работы.')
-                current_timestamp = int(time.time())
-                time.sleep(RETRY_TIME)
+            current_timestamp = int(time.time())
+            time.sleep(RETRY_TIME)
 
         except Exception as error:
             logging.error(error)
