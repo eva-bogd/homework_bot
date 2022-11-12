@@ -88,7 +88,6 @@ def check_response(response):
     ----------
     response: dict
         словарь с ключами 'homeworks' и 'current_date'
-
     Возвращает:
     ----------
     homeworks: list
@@ -96,13 +95,14 @@ def check_response(response):
     """
 
     if (isinstance(response, dict)
-        and response.__contains__('homeworks')
-        and response.__contains__('current_date')):
-            homeworks = response['homeworks']
-                if isinstance(homeworks, list):
-                    return homeworks
-                else:
-                    raise TypeError('homeworks не является списком.')
+      and response.__contains__('homeworks')
+      and response.__contains__('current_date')):
+        homeworks = response['homeworks']
+        if isinstance(homeworks, list):
+            return homeworks
+        else:
+            raise TypeError('homeworks не является списком.')
+
     else:
         raise TypeError(
             'Ответ API не является словарём и не содержит ожидаемые ключи.')
@@ -114,7 +114,6 @@ def parse_status(homework):
     ----------
     homework: dict
         словарь с данными о домашней работе
-
     Возвращает:
     ----------
     str
@@ -122,8 +121,8 @@ def parse_status(homework):
     """
 
     if (isinstance(homework, dict)
-        and homework.__contains__('homework_name')
-        and homework.__contains__('status')):
+      and homework.__contains__('homework_name')
+      and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
         if homework_status in HOMEWORK_STATUSES:
