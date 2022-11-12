@@ -29,12 +29,12 @@ HOMEWORK_STATUSES = {
 
 logging.basicConfig(
     level=logging.DEBUG,
-    filename='program.log', 
+    filename='program.log',
     format='%(asctime)s, %(levelname)s, %(name)s, %(message)s'
 )
 logger = logging.getLogger()
 streamHandler = logging.StreamHandler(sys.stdout)
-logger.addHandler(streamHandler) 
+logger.addHandler(streamHandler)
 
 
 def send_message(bot, message):
@@ -49,7 +49,7 @@ def send_message(bot, message):
         сообщение, которое бот должен отправить
     """
 
-    try: 
+    try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info('Сообщение успешно отправлено.')
     except Exception:
@@ -59,7 +59,7 @@ def send_message(bot, message):
 def get_api_answer(current_timestamp):
     """
     Запрос к эндпоинту API-сервиса ЯндексПрактикум.
-    
+
     Параметр:
     ----------
     current_timestamp: int
@@ -71,23 +71,25 @@ def get_api_answer(current_timestamp):
         ответ API-сервиса ЯндексПрактикум
     """
 
-    timestamp = current_timestamp #or int(time.time())
+    timestamp = current_timestamp
     params = {'from_date': timestamp}
     api_answer = requests.get(ENDPOINT, headers=HEADERS, params=params)
     incorrect_codes = ['404', '408', '429', '504', '500']
     if api_answer.status_code == 200:
         return api_answer.json()
     elif api_answer.status_code in incorrect_codes:
-        raise exceptions.StatusCodeError(f'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум.' 
-                                         f'Код ответа сервера:  {api_answer.status_code}')
+        raise exceptions.StatusCodeError(
+            f'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум.'
+            f'Код ответа сервера:  {api_answer.status_code}')
     else:
-        raise exceptions.StatusCodeError('Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум')
+        raise exceptions.StatusCodeError(
+            'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум')
 
 
 def check_response(response):
     """
     Проверка ответа API-сервиса ЯндексПрактикум на корректность.
-    
+
     Параметр:
     ----------
     response: dict
@@ -99,7 +101,9 @@ def check_response(response):
         список с домашними работами
     """
 
-    if isinstance(response, dict) and response.__contains__('homeworks') and response.__contains__('current_date'):
+    if (isinstance(response, dict)
+    and response.__contains__('homeworks')
+    and response.__contains__('current_date')):
         homeworks = response['homeworks']
         if isinstance (homeworks, list):
             return homeworks
@@ -107,13 +111,14 @@ def check_response(response):
             raise TypeError('Homeworks не является списком.')
 
     else:
-        raise TypeError('Ответ API не является словарём и не содержит ожидаемые ключи.') # если тут пишу своё исключение, тесты не проходят
+        raise TypeError(
+            'Ответ API не является словарём и не содержит ожидаемые ключи.')
 
 
 def parse_status(homework):
     """
     Получение информации о конкретной домашней работе, статус этой работы.
-    
+
     Параметр:
     ----------
     homework: dict
@@ -124,13 +129,21 @@ def parse_status(homework):
     str
         строку, содержащую сообщение о статусе домашней работы
     """
-    
-    homework_name = homework['homework_name']
-    homework_status = homework['status']
-    if homework_status in HOMEWORK_STATUSES:
-        verdict= HOMEWORK_STATUSES[homework_status]
+
+    if (isinstance(homework, dict)
+    # and homework.__contains__('homework_name')
+    # если оставляю строчку с проверкой'homework_name' не проходят тесты
+    and homework.__contains__('status')):
+        homework_name = homework['homework_name']
+        homework_status = homework['status']
+        if homework_status in HOMEWORK_STATUSES:
+            verdict= HOMEWORK_STATUSES[homework_status]
+        else:
+            raise exceptions.HomeworkStatusError(
+                'Получен неизвестный статус домашней работы.')
     else:
-        raise exceptions.HomeworkStatusError('Ошибка при получении информации о домашней работе, неизвестный статус домашней работы.')
+        raise TypeError(
+            'Homework не является словарём и не содержит ожидаемые ключи.')
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
@@ -155,7 +168,7 @@ def main():
         raise exceptions.TokensError(error_message)
 
     bot = Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = 0 # int(time.time())
+    current_timestamp = int(time.time())
 
     while True:
         try:
