@@ -94,14 +94,13 @@ def check_response(response):
     homeworks: list
         список с домашними работами
     """
-    if (isinstance(response, dict)
-        and response.__contains__('homeworks')
-        and response.__contains__('current_date')):
-            homeworks = response['homeworks']
-            if isinstance(homeworks, list):
-                return homeworks
-            else:
-                raise TypeError('homeworks не является списком.')
+    if (isinstance(response, dict) and response.__contains__('homeworks')
+                                   and response.__contains__('current_date')):
+        homeworks = response['homeworks']
+        if isinstance(homeworks, list):
+            return homeworks
+        else:
+            raise TypeError('homeworks не является списком.')
 
     else:
         raise TypeError(
@@ -120,15 +119,14 @@ def parse_status(homework):
     str
         строку, содержащую сообщение о статусе домашней работы
     """
-    if (isinstance(homework, dict)
-        and homework.__contains__('homework_name')
-        and homework.__contains__('status')):
-            homework_name = homework['homework_name']
-            homework_status = homework['status']
-            if homework_status in HOMEWORK_STATUSES:
-                verdict = HOMEWORK_STATUSES[homework_status]
-            else:
-                raise exceptions.HomeworkStatusError(
+    if (isinstance(homework, dict) and homework.__contains__('homework_name')
+                                   and homework.__contains__('status')):
+        homework_name = homework['homework_name']
+        homework_status = homework['status']
+        if homework_status in HOMEWORK_STATUSES:
+            verdict = HOMEWORK_STATUSES[homework_status]
+        else:
+            raise exceptions.HomeworkStatusError(
                 'Получен неизвестный статус домашней работы.')
     else:
         raise KeyError(
