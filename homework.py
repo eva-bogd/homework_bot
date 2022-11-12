@@ -95,7 +95,7 @@ def check_response(response):
         список с домашними работами
     """
     if (isinstance(response, dict) and response.__contains__('homeworks')
-                                   and response.__contains__('current_date')):
+        and response.__contains__('current_date')):
         homeworks = response['homeworks']
         if isinstance(homeworks, list):
             return homeworks
@@ -120,7 +120,7 @@ def parse_status(homework):
         строку, содержащую сообщение о статусе домашней работы
     """
     if (isinstance(homework, dict) and homework.__contains__('homework_name')
-                                   and homework.__contains__('status')):
+        and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
         if homework_status in HOMEWORK_STATUSES:
