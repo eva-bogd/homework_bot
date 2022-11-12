@@ -132,7 +132,7 @@ def parse_status(homework):
 
     if (isinstance(homework, dict)
     # and homework.__contains__('homework_name')
-    # если оставляю строчку с проверкой'homework_name' не проходят тесты
+    # если оставляю строчку с проверкой 'homework_name' не проходят тесты
     and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
