@@ -39,8 +39,7 @@ logger.addHandler(streamHandler)
 
 
 def send_message(bot, message):
-    """
-    Отправка сообщения в Telegram чат.
+    """Отправка сообщения в Telegram чат.
 
     Параметры:
     ----------
@@ -58,8 +57,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
-    """
-    Запрос к эндпоинту API-сервиса ЯндексПрактикум.
+    """Запрос к эндпоинту API-сервиса ЯндексПрактикум.
 
     Параметр:
     ----------
@@ -88,8 +86,7 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """
-    Проверка ответа API-сервиса ЯндексПрактикум на корректность.
+    """Проверка ответа API-сервиса ЯндексПрактикум на корректность.
 
     Параметр:
     ----------
@@ -103,10 +100,10 @@ def check_response(response):
     """
 
     if (isinstance(response, dict)
-    and response.__contains__('homeworks')
-    and response.__contains__('current_date')):
+        and response.__contains__('homeworks')
+        and response.__contains__('current_date')):
         homeworks = response['homeworks']
-        if isinstance (homeworks, list):
+        if isinstance(homeworks, list):
             return homeworks
         else:
             raise TypeError('homeworks не является списком.')
@@ -117,8 +114,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """
-    Получение информации о конкретной домашней работе, статус этой работы.
+    """Получение информации о конкретной домашней работе, статус этой работы.
 
     Параметр:
     ----------
@@ -132,12 +128,12 @@ def parse_status(homework):
     """
 
     if (isinstance(homework, dict)
-    and homework.__contains__('homework_name')
-    and homework.__contains__('status')):
+        and homework.__contains__('homework_name')
+        and homework.__contains__('status')):
         homework_name = homework['homework_name']
         homework_status = homework['status']
         if homework_status in HOMEWORK_STATUSES:
-            verdict= HOMEWORK_STATUSES[homework_status]
+            verdict = HOMEWORK_STATUSES[homework_status]
         else:
             raise exceptions.HomeworkStatusError(
                 'Получен неизвестный статус домашней работы.')
@@ -148,8 +144,7 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """
-    Проверка доступности переменных окружения.
+    """Проверка доступности переменных окружения.
 
     Возвращает:
     ----------
