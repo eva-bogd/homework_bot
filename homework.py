@@ -53,7 +53,7 @@ def send_message(bot, message):
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info('Сообщение успешно отправлено.')
     except Exception:
-        logging.exception('Сбой при отправке сообщения.')
+        raise exceptions.SendMessageError('Не удалось отправить сообщение.')
 
 
 def get_api_answer(current_timestamp):
@@ -73,16 +73,12 @@ def get_api_answer(current_timestamp):
     timestamp = current_timestamp
     params = {'from_date': timestamp}
     api_answer = requests.get(ENDPOINT, headers=HEADERS, params=params)
-    incorrect_codes = ['404', '408', '429', '504', '500']
     if api_answer.status_code == 200:
         return api_answer.json()
-    elif api_answer.status_code in incorrect_codes:
-        raise exceptions.StatusCodeError(
-            f'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум.'
-            f'Код ответа сервера:  {api_answer.status_code}')
     else:
         raise exceptions.StatusCodeError(
-            'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум')
+            f'Ошибка при обращении к эндпоинту API-сервиса ЯндексПрактикум.'
+            f'Код ответа сервера: {api_answer.status_code}.')
 
 
 def check_response(response):
@@ -100,8 +96,8 @@ def check_response(response):
         список с домашними работами
     """
     if (isinstance(response, dict)
-            and response.__contains__('homeworks')
-            and response.__contains__('current_date')):
+            and 'homeworks' in response
+            and 'current_date' in response):
         homeworks = response['homeworks']
         if isinstance(homeworks, list):
             return homeworks
@@ -128,8 +124,8 @@ def parse_status(homework):
         строку, содержащую сообщение о статусе домашней работы
     """
     if (isinstance(homework, dict)
-            and homework.__contains__('homework_name')
-            and homework.__contains__('status')):
+            and 'homework_name' in homework
+            and 'status' in homework):
         homework_name = homework['homework_name']
         homework_status = homework['status']
         if homework_status in HOMEWORK_STATUSES:
@@ -169,7 +165,7 @@ def main():
         try:
             response = get_api_answer(current_timestamp)
             homeworks = check_response(response)
-            if (len(homeworks) > 0):
+            if bool(homeworks):
                 for homework in homeworks:
                     message = parse_status(homework)
                     send_message(bot, message)
