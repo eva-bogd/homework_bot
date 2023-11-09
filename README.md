@@ -43,7 +43,7 @@ TG_TOKEN = токен_telegram_бота
 TG_ID = telegram_ID
 ```
 
-5. В директории файлом homework.py выполнить команду:
+5. В директории c файлом homework.py выполнить команду:
 
 ```
 python homework.py
